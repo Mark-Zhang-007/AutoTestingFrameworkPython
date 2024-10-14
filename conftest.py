@@ -13,6 +13,7 @@ from webdriver_manager.core.os_manager import ChromeType
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from Utility.utils import *
 import time
 from reportportal_client import RPLogger, RPLogHandler
@@ -26,7 +27,7 @@ def init_browser(request):
     global driver
     global port_index
 
-    port_no = update_port()
+    port_no = 9222
     
     logging.info("clean existed screenshots")    
         
@@ -37,7 +38,7 @@ def init_browser(request):
     thread_chrome_launcher = threading.Thread(target=start_browser, args=[thread_lock, browser, port_no], name="StartChromeBrowser")
     thread_chrome_launcher.start()
 
-    chrome_options = Options()
+    chrome_options = ChromeOptions()
     chrome_options.add_experimental_option('debuggerAddress', f'127.0.0.1:{port_no}')
     
     driver = webdriver.Chrome(service=ChromeService(executable_path="chromedriver.exe"), options=chrome_options)
@@ -46,6 +47,7 @@ def init_browser(request):
     driver.set_page_load_timeout(WAIT_TIME_60S)
     driver.set_script_timeout(WAIT_TIME_30S)
     driver.implicitly_wait(WAIT_TIME_5S)
+    request.cls.driver = driver
 
     # close redundant tabs when initialize browser, just leave one active tab
     driver.switch_to.new_window("tab")
@@ -73,7 +75,7 @@ def init_browser(request):
         driver.quit()
     except Exception as e:
         logging.error(str(e))
-    port_index +=1
+    
     
 
 @pytest.fixture()
@@ -146,7 +148,7 @@ def setup(request):
         # chrome_options.add_argument("--enable-automation")
         # chrome_options.add_argument("--no-sandbox")
         chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        chrome_options.add_experimental_option("useAutomationExtension", False)        
+        chrome_options.add_experimental_option("useAutomationExtension", False)
 
         driver = webdriver.Chrome(service=ChromeService(executable_path="chromedriver.exe"), options= chrome_options)
         # if browser_version is not None:
@@ -154,7 +156,13 @@ def setup(request):
         # else:
         #     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     elif browser_name == "edge":
-        driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+        edge_options = EdgeOptions()
+        edge_options.add_argument("--start-maximized")
+        edge_options.add_experimental_option("excludeSwitches", ['enable-automation'])
+        edge_options.add_experimental_option("useAutomationExtension", False)
+
+        driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install(), service_args=['--append-log', '--readable-timestamp', '--log-level=DEBUG'], log_output="testedge.log"))
+        driver.maximize_window()
     elif browser_name == "firefox":
         driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
     elif browser_name == "chromium":
