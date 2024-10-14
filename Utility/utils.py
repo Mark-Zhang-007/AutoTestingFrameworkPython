@@ -4,6 +4,8 @@ import subprocess
 import os
 from datetime import datetime
 from Screenshot import Screenshot
+import json
+import pytest
 
 
 WAIT_TIME_1S   = 1
@@ -15,6 +17,34 @@ WAIT_TIME_30S  = 30
 WAIT_TIME_60S  = 60
 WAIT_TIME_120S = 120
 WAIT_TIME_150S = 150
+
+class TestCaseDataset():
+
+    def get_single_data(page_name, data_file_name, test_case_name):
+        root_dir = os.getcwd()
+        with open(os.path.join(root_dir, "TestData", page_name, data_file_name), mode="r") as fp:
+            test_data_config = json.load(fp)
+
+        if test_data_config["execution"]:
+            return test_data_config["testcases"][test_case_name]
+        return None
+    
+    def get_multi_data(page_name, data_file_name, test_case_name):
+        root_dir = os.getcwd()
+        with open(os.path.join(root_dir, "TestData", page_name, data_file_name), mode="r") as fp:
+            test_data_config = json.load(fp)
+        test_ids = []
+        test_data_set = []
+
+        if test_data_config["execution"]:
+            for item in test_data_config["testcases"][test_case_name]:
+                test_ids.append(f"{item['index']}_{item['env']}")
+                if item["execution"]:
+                    test_data_set.append(item)
+                else:
+                    test_data_set.append(pytest.param(item, marks=pytest.mark.skip))
+        return test_data_set, test_ids
+    
 
 def start_browser(lock, browser_type, browser_port):
     lock.acquire()
