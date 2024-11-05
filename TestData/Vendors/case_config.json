@@ -1,0 +1,28 @@
+{
+    "execution": true,
+    "testcases":{
+        "AddMultipleVendor":[
+            {
+                "execution": true,
+                "index": "001",
+                "env": "dev",
+                "url": "https://seqauto-cn-dev.astrazeneca.net/",
+                "vendorname": "MarkTest01"
+            },
+            {
+                "execution": false,
+                "index": "002",
+                "env": "dev",
+                "url": "https://seqauto-cn-dev.astrazeneca.net/",
+                "vendorname": "MarkTest02"
+            }
+        ],
+        "AddSingleVendor":{
+            "execution": true,
+            "index": "003",
+            "env": "dev",
+            "url": "https://seqauto-cn-dev.astrazeneca.net/",
+            "vendorname": "MarkTest03"
+        }
+    }
+}
