@@ -1,0 +1,31 @@
+{
+    "execution": true,
+    "testcases":{
+        "AddMultipleStudy":[
+            {
+                "execution": true,
+                "index": "001",
+                "env": "dev",
+                "url": "https://seqauto-cn-dev.astrazeneca.net/",
+                "aztid": "MarkTest01",
+                "azturi": "https://www.astrazeneca.net"
+            },
+            {
+                "execution": true,
+                "index": "002",
+                "env": "dev",
+                "url": "https://seqauto-cn-dev.astrazeneca.net/",
+                "aztid": "MarkTest02",
+                "azturi": "https://www.astrazeneca.net"
+            }
+        ],
+        "AddSingleStudy":{
+            "execution": true,
+            "index": "003",
+            "env": "dev",
+            "url": "https://seqauto-cn-dev.astrazeneca.net/",
+            "aztid": "MarkTest03",
+            "azturi": "https://www.astrazeneca.net"
+        }
+    }
+}
