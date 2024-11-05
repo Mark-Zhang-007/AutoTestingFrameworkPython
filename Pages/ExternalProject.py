@@ -105,12 +105,10 @@ class ExternalProjectPage(BasePage):
 
         if "samplesperbatch" in kwargs.keys() and kwargs["samplesperbatch"] is not None:
             self.input_samples_per_batch(kwargs["samplesperbatch"])
+    
+    def get_studies(self):
+        studies_options_locator = (By.XPATH, "//select[@id='id_study']/option")
+        return self.get_select_options(studies_options_locator)
 
-    def get_message(self):
-        message_locator = (By.XPATH, "//ul[@class='messagelist']/li[@class='success']")
-        self.wait_expected_condition(EC.presence_of_element_located(message_locator))
-        self.wait_expected_condition(EC.visibility_of_element_located(message_locator))
 
-        ele_message = self.get_element(message_locator)
-        return ele_message
     

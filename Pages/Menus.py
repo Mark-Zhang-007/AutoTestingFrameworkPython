@@ -2,6 +2,8 @@ from Pages.Analyses import AnalysesPage
 from Pages.ExternalProject import ExternalProjectPage
 from Pages.Transfer import TransferPage
 from Pages.Vendors import VendorsPage
+from Pages.Studies import StudiesPage
+from Pages.SequencingPanelVendors import SequencingPanelVendorsPage
 from Pages.basepage import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,6 +19,8 @@ class MenuLocators:
     analyses_side_bar_locator = (By.XPATH, "//a[.='Analyses']")
     aggregations_side_bar_locator = (By.XPATH, "//a[.='Aggregations']")
     vendors_side_bar_locator = (By.XPATH, "//a[.='Vendors']")
+    studies_side_bar_locator = (By.XPATH, "//a[.='Studies']")
+    seq_panel_vendors_side_bar_locator = (By.XPATH, "//a[.='Sequencing panel vendors']")
 
 # Navigate to Different Menus
 class MenuPage(BasePage):
@@ -30,7 +34,7 @@ class MenuPage(BasePage):
     def view_site_menu(self):
         self.navigate_to(MenuLocators.view_site_link_locator)
 
-    def home_menu(self):        
+    def home_menu(self):
         self.wait_expected_condition(EC.presence_of_element_located(MenuLocators.home_locator))
         self.navigate_to(MenuLocators.home_locator)
 
@@ -62,3 +66,13 @@ class MenuPage(BasePage):
         self.wait_expected_condition(EC.presence_of_element_located(MenuLocators.vendors_side_bar_locator))
         self.navigate_to(MenuLocators.vendors_side_bar_locator)
         return VendorsPage(self.driver, self.logger)
+    
+    def studies_menu(self):
+        self.wait_expected_condition(EC.presence_of_element_located(MenuLocators.studies_side_bar_locator))
+        self.navigate_to(MenuLocators.studies_side_bar_locator)
+        return StudiesPage(self.driver, self.logger)
+    
+    def sequencing_panel_vendors_menu(self):
+        self.wait_expected_condition(EC.presence_of_element_located(MenuLocators.seq_panel_vendors_side_bar_locator))
+        self.navigate_to(MenuLocators.seq_panel_vendors_side_bar_locator)
+        return SequencingPanelVendorsPage(self.driver, self.logger)

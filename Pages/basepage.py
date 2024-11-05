@@ -42,6 +42,16 @@ class BasePage():
             self.logger.error(f"Exception occurred with message: [{str(e)}]")
             self.logger.error(traceback.format_exc())
         return None
+    
+    def get_elements(self, locator:tuple) -> WebElement:
+        self.logger.info(f"Try to find element: [{locator}]")
+        try:
+            eles = self.driver.find_elements(*locator)
+            return eles
+        except Exception as e:
+            self.logger.error(f"Exception occurred with message: [{str(e)}]")
+            self.logger.error(traceback.format_exc())
+        return None
 
     def input(self, locator, value):
         self.logger.info(f"Try to input value for element: [{locator}], value: [{value}]")
@@ -89,6 +99,9 @@ class BasePage():
             self.logger.error(traceback.format_exc())
 
     def click(self, locator):
+        """
+        Click element by locator
+        """
         self.logger.info(f"Try to click on element: [{locator}]")
         try:
             ele_button = self.driver.find_element(*locator)
@@ -133,4 +146,21 @@ class BasePage():
         if upload_flg:
             upload_screenshot_with_desc(file_path)
 
+    # Get displayed message once process done
+    def get_message(self):
+        message_locator = (By.XPATH, "//ul[@class='messagelist']/li[@class='success']")
+        self.wait_expected_condition(EC.presence_of_element_located(message_locator))
+        self.wait_expected_condition(EC.visibility_of_element_located(message_locator))
+
+        ele_message = self.get_element(message_locator)
+        return ele_message
+    
+    # Get Dropdown Option Values, default start from 1
+    def get_select_options(self, locator:tuple, start=1):
+        result = []
+        ele_select_options = self.get_elements(locator)
+        if ele_select_options is not None:
+            for item in ele_select_options:
+                result.append(item.text)
+        return result[start:]
         

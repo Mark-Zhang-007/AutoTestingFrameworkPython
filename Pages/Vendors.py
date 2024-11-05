@@ -86,11 +86,4 @@ class VendorsPage(BasePage):
         add_message_ele = self.get_message()
         self.logger.info(f"Add New Vendor Message: <<{add_message_ele.text}>>")
 
-    def get_message(self):
-        message_locator = (By.XPATH, "//ul[@class='messagelist']/li[@class='success']")
-        self.wait_expected_condition(EC.presence_of_element_located(message_locator))
-        self.wait_expected_condition(EC.visibility_of_element_located(message_locator))
-
-        ele_message = self.get_element(message_locator)
-        return ele_message
     
