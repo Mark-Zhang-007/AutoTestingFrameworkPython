@@ -20,18 +20,20 @@ WAIT_TIME_150S = 150
 
 class TestCaseDataset():
 
-    def get_single_data(page_name, data_file_name, test_case_name):
+    @staticmethod
+    def get_single_data(module_name, data_file_name, test_case_name):
         root_dir = os.getcwd()
-        with open(os.path.join(root_dir, "TestData", page_name, data_file_name), mode="r") as fp:
+        with open(os.path.join(root_dir, "TestData", module_name, data_file_name), mode="r") as fp:
             test_data_config = json.load(fp)
 
         if test_data_config["execution"]:
             return test_data_config["testcases"][test_case_name]
         return None
     
-    def get_multi_data(page_name, data_file_name, test_case_name):
+    @staticmethod
+    def get_multi_data(module_name, data_file_name, test_case_name):
         root_dir = os.getcwd()
-        with open(os.path.join(root_dir, "TestData", page_name, data_file_name), mode="r") as fp:
+        with open(os.path.join(root_dir, "TestData", module_name, data_file_name), mode="r") as fp:
             test_data_config = json.load(fp)
         test_ids = []
         test_data_set = []
@@ -51,7 +53,6 @@ def start_browser(lock, browser_type, browser_port):
     subprocess.run(f"start_{browser_type}_{browser_port}.bat")
     wait(WAIT_TIME_2S, "release locked browser")
     lock.release()
-
 
 def wait(s, message="Wait time count Down"):
     logging.info(f"Will wait for <{s}> seconds!!!")
