@@ -6,39 +6,28 @@ from Pages.Menus import MenuPage
 from Pages.ExternalProject import ExternalProjectPage
 from Pages.Transfer import TransferPage
 from Pages.Analyses import AnalysesPage
+from Pages.Vendors import VendorsPage
 import sys
 import json
-
-def parametrize_data():
-    root_dir = os.getcwd()
-    with open(os.path.join(root_dir, "TestData", "multi_case_config.json"), mode="r") as fp:
-        test_data_config = json.load(fp)
-    test_ids = []
-    test_data_set = []
-
-    for item in test_data_config:
-        test_ids.append(f"{item['index']}_{item['env']}_{item['testcase']}")
-        execute_flg = item["execute"]
-        if execute_flg:
-            test_data_set.append(item)
-        else:
-            test_data_set.append(pytest.param(item, marks=pytest.mark.skip))
-    return test_data_set, test_ids
 
 
 @pytest.mark.usefixtures("setup", "rp_logger")
 class TestSeqAuto():
 
-    test_data_set = parametrize_data()
+    test_data_set = TestCaseDataset.get_multi_data("ExternalProject", "case_config.json", "ExternalProjectMultiple")
     
     @pytest.mark.parametrize("data", test_data_set[0], ids=test_data_set[1])
-    def test_externalProject_multiple(self, data:dict):
+    def test_ExternalProjectMultiple(self, data:dict):
         
         test_data = data
+        # There's no test case need to be executed for now
+        if len(test_data)==0:
+            return
         
         class_name = self.__class__.__name__
         test_name = sys._getframe().f_code.co_name #request.node.name
-        test_id = f"{test_data['index']}_{test_data['env']}_{test_data['testcase']}"
+
+        test_id = f"{test_data['index']}_{test_data['env']}"
         sub_dir = f"{class_name}.{test_name}[{test_id}]"
 
         rp_logger = self.rplogger
